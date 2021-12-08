@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="nraja" id="1">
+        <createTable tableName="person">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="person"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="nraja" id="New Column to Person Table">
+        <addColumn tableName="person">
+			<column name="birth_date" type="date"/>
+		</addColumn>
+    </changeSet>
+    
+    <changeSet author="nraja" id="Modify Birth Date Column to Person Table">
+        <modifyDataType tableName="person" columnName="name" newDataType="VARCHAR(100)"/>
+		<rollback>
+			<modifyDataType tableName="person" columnName="name" newDataType="VARCHAR(255)"/>		
+		</rollback>
+		
+		
+    </changeSet>
+	
+	<changeSet author="nraja" id="Data Insert for Person">
+        <sql>
+			insert into person (id,name,address,birth_date) values (1,'Nagarjuna','Hyderbad','1981-12-22')
+		</sql>
+		<rollback>
+			delete from person where id=1	
+		</rollback>
+    </changeSet>
+    
+</databaseChangeLog>
